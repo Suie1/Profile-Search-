@@ -9,7 +9,7 @@ public class DisplayUserController {
     
     @AuraEnabled
     Public static NetworkMember[] getMembers(){
-        //find the community that the control is running in
+        //find the current community
         Id netID = Network.getnetworkId();
         List<NetworkMember> nw = [select MemberId, Member.Name, Member.FullPhotoUrl,Network.UrlPathPrefix from NetworkMember where Networkid=:netID and Member.isActive=true];
         return nw;
