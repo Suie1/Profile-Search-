@@ -1,0 +1,5 @@
+<aura:component implements="forceCommunity:availableForAllPageTypes">
+     <aura:attribute name="searchtype" type="String" default="Profile" access="global" />
+    <c:searchBar />
+    <c:PeopleList searchtype="{!v.searchtype}" />
+</aura:component>
