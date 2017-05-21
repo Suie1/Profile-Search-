@@ -1,3 +1,5 @@
 <design:component>
+
 	 <design:attribute name="searchtype" label="Select Search type:" datasource="Profile,Name" default="Profile" />
+	 
 </design:component>
