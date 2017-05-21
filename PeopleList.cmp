@@ -50,8 +50,6 @@
                    </td>
                </tr>
 	     </aura:iteration>
-
-  
 	   </tbody>
 	 </table>
 </aura:component>
