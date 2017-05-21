@@ -25,8 +25,7 @@
             console.log("findbyName");
         	action = component.get("c.findbyName");
     	}
-      
-        //var action = component.get("c.searchNetworkProfile");
+     
         action.setParams({
           "searchKey": searchKey
         });
