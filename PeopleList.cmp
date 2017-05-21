@@ -1,0 +1,57 @@
+<aura:component controller="DisplayUserController" >
+	<aura:attribute name="users" type="user[]"/>
+    <aura:attribute name="urlpath" type="string"/>
+    <aura:attribute name="members" type="networkmember[]"/>
+    <aura:attribute name="urlprefix" type="string"/>
+    <aura:attribute name="searchtype" type="string" />
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:handler event="c:SearchKeyChange" action="{!c.searchKeyChange}"/>
+     <table class="slds-table slds-table--bordered slds-table--cell-buffer">  
+          <thead>
+    <tr class="slds-text-title--caps">
+        <th scope="col">
+        <div class="slds-truncate" title="Picture"></div>
+      </th>
+      <th scope="col">
+        <div class="slds-truncate" title="Name">Name</div>
+      </th>
+      <th scope="col">
+        <div class="slds-truncate" title="MajorClassYear">Title</div>
+      </th>
+      <th scope="col">
+        <div class="slds-truncate" title="Email">Email</div>
+      </th>
+     
+    </tr>
+  </thead> 
+	      <tbody>
+	      <aura:iteration items="{!v.users}" var="user">
+               <tr>
+                  <th scope="row" data-label="Picture">
+                   <td style="padding: 10px;">
+                      <div class="image forceChatterCompoundFieldUserNameRenderer">
+                        <div class="standardSize circular light forceChatterEntityPhoto" style="background-color: transparent;">
+                            <span class="uiImage">
+                                <img src="{!user.FullPhotoUrl}" class="image" alt="" />
+                            </span>
+                        </div>
+                       </div>
+                   </td>
+                   </th>
+                    <td data-label="Name">
+        				<ui:outputURL value="{!'/' + v.urlprefix + '/s/profile/' + user.Id}" label="{!user.Name}"/>
+                   </td>
+                    <td data-label="Title">
+                        <div class="slds-truncate" title="Title">{!user.Title}</div>
+                   </td>
+                     <td data-label="Email">
+                         <div class="slds-truncate" title="Email">{!user.Email}</div>
+                   </td>
+               </tr>
+	     </aura:iteration>
+
+  
+	   </tbody>
+	 </table>
+</aura:component>
