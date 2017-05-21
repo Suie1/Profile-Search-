@@ -1,0 +1,65 @@
+
+public class DisplayUserController {
+    @AuraEnabled
+    public static User[] getUsers() { 
+      	Set<id> resultIds = getCommunityUsers();
+        List<User> u = [SELECT Id, Name,email,FullPhotoUrl,Title from User where isactive=true and Id in :resultIds order by lastname,firstname];
+          Return u;
+    }
+    
+    @AuraEnabled
+    Public static NetworkMember[] getMembers(){
+        //find the community that the control is running in
+        Id netID = Network.getnetworkId();
+        List<NetworkMember> nw = [select MemberId, Member.Name, Member.FullPhotoUrl,Network.UrlPathPrefix from NetworkMember where Networkid=:netID and Member.isActive=true];
+        return nw;
+    }
+    public static Set<Id> getCommunityUsers(){
+        //get a list of users in the current community
+        Id netID = Network.getnetworkId();
+        List<NetworkMember> netUsers = [select MemberId from NetworkMember where NetworkID = :netID];
+        Set<Id> resultIds = new Set<Id>();
+        For (NetworkMember nm : netUsers){
+            resultIds.add(nm.MemberId);
+        }
+        return resultIds;
+    }
+    
+    @AuraEnabled
+    public static String getURLPrefix(){
+        //find the URL prefix of the community
+        Id netID = Network.getnetworkId();
+        Network n = [select id, UrlPathPrefix  from Network where id=:netId];
+        string urlprefix = n.UrlPathPrefix;
+        system.debug(urlprefix);
+        return urlprefix;
+    }
+    
+    @AuraEnabled
+    public static User[] findbyName(String searchKey){
+        //this is the original search option - by name
+        Set<id> resultIds = getCommunityUsers();
+        String name = '%' + searchkey + '%';
+        List<User> u = [SELECT Id, Name,email,FullPhotoUrl,Title  from User where isactive=true and Id in :resultIds and name like :name order by lastname,firstname];
+        Return u;
+    }
+    
+    @AuraEnabled
+    public static User[] searchProfile(String searchKey){
+        //Uses SOSL to search the profile - limited to users in the current community
+        Set<id> resultIds = getCommunityUsers();
+        String name = String.escapeSingleQuotes(searchKey).trim().toLowerCase();
+        String soqlquery = 'FIND \'' + name + '\' ';
+        soqlquery += 'IN ALL FIELDS ';  
+        soqlquery += 'RETURNING User (Id,Name,Email,FullPhotoUrl,Title WHERE isactive=true and Id in :resultIds)';
+         try {
+          List<List<sObject>> soqlresults = Search.query(soqlquery);
+          return soqlresults[0];      
+        }
+        catch (System.SearchException e) {
+           List<User> u = [SELECT Id, Name,email,FullPhotoUrl,Title  from User where isactive=true and Id in :resultIds order by lastname,firstname];
+            Return u;
+        }
+  }
+
+}
